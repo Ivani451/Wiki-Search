@@ -1,0 +1,76 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="styles.css" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap.min.css"
+    />
+
+    <script>
+      $(document).ready(function() {
+        // Targets the search button to listen for a click
+        $("#search_button").click(function() {
+          // Stores the search bar's info into this variable
+          var search_term = $("#search_bar").val();
+          // Wiki URL that will be used for an AJAX request
+          var wiki_url =
+            "https://en.wikipedia.org/w/api.php?action=opensearch&search=" +
+            search_term +
+            "&format=json&callback=?";
+
+          $.ajax({
+            type: "GET",
+            url: wiki_url,
+            async: false,
+            dataType: "json",
+            success: function(data) {
+              $("#output").html("");
+
+              for (var i = 0; i < data[1].length; i++) {
+                $("#output").prepend(
+                  "<li><a href= " +
+                    data[3][i] +
+                    ">" +
+                    data[1][i] +
+                    "</a><p>" +
+                    data[2][i] +
+                    "</p></li>"
+                );
+              }
+            },
+            error: function(error_message) {
+              alert("Error");
+            }
+          });
+        });
+      });
+    </script>
+  </head>
+
+  <body>
+    <div class="container">
+      <h2>Wikipedia Search</h2>
+
+      <div class="row">
+        <a href="https://en.wikipedia.org/wiki/Special:Random" target="blank"
+          >Click here for a random article</a
+        >
+      </div>
+      <div class="row">
+        <input
+          class="form-control"
+          id="search_bar"
+          placeholder="Please enter "
+        />
+        <button class="btn btn-primary" id="search_button" type="button">
+          Search
+        </button>
+      </div>
+    </div>
+
+    <ul id="output"></ul>
+  </body>
+</html>
